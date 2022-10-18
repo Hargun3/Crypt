@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class = "flex justify-center p-4">
+    <div class="container flex justify-center">
+        <div class="rounded overflow-hidden w-full lg:w-6/12 md:w-6/12 bg-gray-800 mx-3 md:mx-0 lg:mx-0">
+            <div class="w-full flex justify-between p-3 grid gap-4 justify-center">
+                <label for = "message" style = "color: white;" class = "text-4xl tracking-tight font-extrabold text-black-900 sm:text-5xl md:text-6xl">Start decryption:</label>
+                <div class="flex justify-center grid">
+                    <div class="mb-3 w-96 row-auto">
+                      <label for="formFileLg" class="form-label inline-block mb-2 w-96"><b>Key:</b></label>
+                      <input
+                      id = "key" 
+                      class="form-control
+                      block
+                      w-full
+                      px-2
+                      py-1
+                      text-sm
+                      font-normal
+                      text-gray-700
+                      bg-white bg-clip-padding
+                      border border-solid border-gray-300
+                      rounded
+                      transition
+                      ease-in-out
+                      m-0
+                      focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" id="formFileSm" 
+                      >                  
+                    </div>
+
+                    <div class="mb-3 w-96 row-auto">
+                        <label for="formFileLg" class="form-label inline-block mb-2 w-96"><b>Encrypted Message:</b></label>
+                        <textarea
+                        id = "message" 
+                        class="form-control
+                        block
+                        w-full
+                        px-2
+                        py-1.5
+                        text-xl
+                        font-normal
+                        text-gray-700
+                        bg-white bg-clip-padding
+                        border border-solid border-gray-300
+                        rounded
+                        transition
+                        ease-in-out
+                        m-0
+                        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" id="formFileLg"
+                        ></textarea>
+                    </div>
+                  </div>
+              <button onclick = "decrypt(document.getElementById('key').value, document.getElementById('message').value)" class = "bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                Submit
+              </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+  function download(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+}
+
+async function decrypt(key, encrypted_message) {
+  url = "http://localhost:5000/api/decrypt";
+  fetch(url,{
+  body : JSON.stringify({key : key, message : encrypted_message}), headers: {
+  'Accept': 'application/json, text/plain, */*',
+  'Content-Type': 'application/json'
+},
+  method : "POST"
+  }).then(r => r.json()).then(r => {
+    download("decrypted.txt", r.decrypted_message);
+})}
+</script>
+{% endblock %}
