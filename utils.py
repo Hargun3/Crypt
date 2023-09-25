@@ -15,4 +15,4 @@ def decrypt(encrypted_message : bytes, key : bytes) -> str:
     decrypted_message = f.decrypt(encrypted_message) #decrypted_message is the type bytes
     return decrypted_message.decode() # decrypted_message is being decoded as a "string" type and then returned
 
-# By Rijul
+
